@@ -80,8 +80,8 @@ static const uint8_t _hidReportDescriptor[] = {
   USAGE(1),           0xB7,          //   USAGE (Stop)                ; bit 2: 4
   USAGE(1),           0xCD,          //   USAGE (Play/Pause)          ; bit 3: 8
   USAGE(1),           0xE2,          //   USAGE (Mute)                ; bit 4: 16
-  USAGE(1),           0xE9,          //   USAGE (Volume Increment)    ; bit 5: 32
-  USAGE(1),           0xEA,          //   USAGE (Volume Decrement)    ; bit 6: 64
+  USAGE(1),           0x6F,          //   USAGE (Volume Increment)    ; bit 5: 32
+  USAGE(1),           0x70,          //   USAGE (Volume Decrement)    ; bit 6: 64
   USAGE(2),           0x23, 0x02,    //   Usage (WWW Home)            ; bit 7: 128
   USAGE(2),           0x94, 0x01,    //   Usage (My Computer) ; bit 0: 1
   USAGE(2),           0x92, 0x01,    //   Usage (Calculator)  ; bit 1: 2
@@ -95,10 +95,10 @@ static const uint8_t _hidReportDescriptor[] = {
   END_COLLECTION(0)                  // END_COLLECTION
 };
 
-BleKeyboard::BleKeyboard(std::string deviceName, std::string deviceManufacturer, uint8_t batteryLevel) 
+BleKeyboard::BleKeyboard(String deviceName, String deviceManufacturer, uint8_t batteryLevel) 
     : hid(0)
-    , deviceName(std::string(deviceName).substr(0, 15))
-    , deviceManufacturer(std::string(deviceManufacturer).substr(0,15))
+    , deviceName(String(deviceName).substring(0, 15))
+    , deviceManufacturer(String(deviceManufacturer).substring(0,15))
     , batteryLevel(batteryLevel) {}
 
 void BleKeyboard::begin(void)
@@ -127,7 +127,8 @@ void BleKeyboard::begin(void)
 #else
 
   BLESecurity* pSecurity = new BLESecurity();
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+//  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+  pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
 
 #endif // USE_NIMBLE
 
@@ -161,7 +162,7 @@ void BleKeyboard::setBatteryLevel(uint8_t level) {
 }
 
 //must be called before begin in order to set the name
-void BleKeyboard::setName(std::string deviceName) {
+void BleKeyboard::setName(String deviceName) {
   this->deviceName = deviceName;
 }
 
